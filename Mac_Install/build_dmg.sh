@@ -10,7 +10,7 @@ STAGE_DIR="/tmp/sollunamail_dmg_stage_$$"
 ICONSET_DIR="/tmp/solluna_icon_$$.iconset"
 
 # 1. Qt 6 for macOS 및 CMake 도구 경로 탐색
-QT_PREFIX="/Users/icsly0808/Qt/6.12.0/macos"
+QT_PREFIX="$HOME/Qt/6.12.0/macos"
 if [ ! -d "$QT_PREFIX" ]; then
     for cand in /Users/*/Qt/6.*/macos /opt/homebrew/opt/qt /usr/local/opt/qt; do
         if [ -x "$cand/bin/macdeployqt" ]; then
@@ -20,14 +20,14 @@ if [ ! -d "$QT_PREFIX" ]; then
     done
 fi
 
-CMAKE_BIN="/Users/icsly0808/Qt/Tools/CMake/CMake.app/Contents/bin/cmake"
+CMAKE_BIN="$HOME/Qt/Tools/CMake/CMake.app/Contents/bin/cmake"
 if [ ! -x "$CMAKE_BIN" ]; then
     CMAKE_BIN="$(command -v cmake || true)"
 fi
 MACDEPLOYQT_BIN="$QT_PREFIX/bin/macdeployqt"
 
 # 2. Release 빌드 디렉터리 확인 및 최신 소스 빌드
-RELEASE_BUILD_DIR="/Users/icsly0808/Work/Git/Build/Release"
+RELEASE_BUILD_DIR="$HOME/Work/Git/Build/Release"
 if [ ! -d "$RELEASE_BUILD_DIR" ]; then
     RELEASE_BUILD_DIR="$PROJECT_ROOT/SollunaMail/build/Release"
     mkdir -p "$RELEASE_BUILD_DIR"

@@ -11,7 +11,7 @@
 
 1. .dmg 인스톨 패키지 생성 방법
 --------------------------------------------------------------------
-  cd /Users/icsly0808/Work/Git/SollunaMail/Mac_Install
+  cd Mac_Install
   chmod +x build_dmg.sh
   ./build_dmg.sh
 
