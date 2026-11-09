@@ -20,10 +20,11 @@ CMakeLists.txt.user*
 .qtcreator/
 SollunaMail/.qtcreator/
 
-# Temporary Backup Directories
+# Temporary Backup Directories & Local Sync Scripts
 backup_*/
 AGY_HISTORY.md
 HISTORY.md
+sync_github_files.sh
 
 # Local OAuth 2.0 Secrets & Runtime Account/Mail Data (Never commit to Git)
 oauth_secrets_local.h
