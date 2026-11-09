@@ -24,6 +24,26 @@
 
 ---
 
+## 주요 화면 (Screenshots)
+
+### 1. 통합 편지함 · 메일 뷰어 · 우측 캘린더 사이드바
+![통합 편지함 및 메인 화면](screenshots/01_main_inbox.png)
+
+### 2. 원클릭 이메일 계정 연결 마법사 (Google · iCloud · 네이버 · 다음/카카오 · IMAP · POP3)
+![새 이메일 계정 추가](screenshots/06_add_account.png)
+
+### 3. 실시간 다국어 전환(🇰🇷 · 🇺🇸 · 🇯🇵) 및 통합 환경 설정
+| 환경 설정 메뉴 | 일반 및 알림 (실시간 IDLE 푸시 & 트레이) |
+| :---: | :---: |
+| ![환경 설정 메뉴](screenshots/02_settings_menu.png) | ![일반 및 알림 설정](screenshots/03_settings_general.jpg) |
+
+### 4. 개인정보 보호 허브(Privacy Hub) 및 내장 사용 설명서(User Guide)
+| 개인정보 보호 허브 (추적 픽셀 차단 & 수신 확인) | 내장 도움말 및 프로그램 사용 설명서 |
+| :---: | :---: |
+| ![개인정보 보호 허브](screenshots/04_settings_privacy.jpg) | ![도움말 및 사용 설명서](screenshots/05_user_guide.jpg) |
+
+---
+
 ## 디렉터리 구조
 
 ```text
@@ -47,10 +67,11 @@ SollunaMail/
 ├── Mac_Install/                  # macOS 디스크 이미지(SollunaMail_1.0.0_macOS.dmg) 자동 빌드 도구
 │   ├── build_dmg.sh              # macdeployqt + codesign + hdiutil 기반 .dmg 생성 스크립트
 │   └── how_to_make_dmg.txt       # macOS 패키지 생성 및 설치 안내서
-└── Linux_Install/                # Linux Debian (sollunamail_1.0.0_amd64.deb) 자립형 설치 패키지 생성 도구
-    ├── build_deb.sh              # Qt 6 런타임 포함 .deb 패키지 자동 빌드 스크립트
-    ├── how_to_make_deb.txt
-    └── README.md                 # 리눅스 패키지 생성 및 설치 안내서
+├── Linux_Install/                # Linux Debian (sollunamail_1.0.0_amd64.deb) 자립형 설치 패키지 생성 도구
+│   ├── build_deb.sh              # Qt 6 런타임 포함 .deb 패키지 자동 빌드 스크립트
+│   ├── how_to_make_deb.txt
+│   └── README.md                 # 리눅스 패키지 생성 및 설치 안내서
+└── screenshots/                  # README 문서용 애플리케이션 실행 스크린샷
 ```
 
 ---
