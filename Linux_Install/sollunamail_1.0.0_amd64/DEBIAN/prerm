@@ -1,0 +1,43 @@
+#!/bin/sh
+set -e
+
+# Stop running SollunaMail process before removal or upgrade
+pkill -x SollunaMail >/dev/null 2>&1 || true
+
+case "$1" in
+    remove)
+        for HOME_DIR in /home/* /root; do
+            [ -d "$HOME_DIR" ] || continue
+            # Remove autostart desktop entry on package uninstall
+            rm -f "$HOME_DIR/.config/autostart/sollunamail.desktop" 2>/dev/null || true
+
+            APP_DATA_DIR="$HOME_DIR/.local/share/Solluna IoT/SollunaMail"
+            BACKUP_DIR="$APP_DATA_DIR/Backup"
+            CFG_DIR="$APP_DATA_DIR/config_set"
+            CACHE_DIR="$APP_DATA_DIR/cache"
+
+            if [ -d "$CFG_DIR" ] || [ -d "$CACHE_DIR" ]; then
+                mkdir -p "$BACKUP_DIR"
+                for f in accounts.json app_settings.json; do
+                    if [ -f "$CFG_DIR/$f" ]; then
+                        cp -f "$CFG_DIR/$f" "$BACKUP_DIR/$f" 2>/dev/null || true
+                    fi
+                done
+                for f in conversations_cache.json deleted_mails_cache.json calendars_cache.json contacts_cache.json contact_groups_cache.json; do
+                    if [ -f "$CACHE_DIR/$f" ]; then
+                        cp -f "$CACHE_DIR/$f" "$BACKUP_DIR/$f" 2>/dev/null || true
+                    fi
+                done
+                rm -rf "$CFG_DIR" "$CACHE_DIR" "$APP_DATA_DIR/pop3" 2>/dev/null || true
+
+                OWNER_UID=$(stat -c "%u:%g" "$HOME_DIR" 2>/dev/null || echo "")
+                if [ -n "$OWNER_UID" ]; then
+                    chown -R "$OWNER_UID" "$APP_DATA_DIR" 2>/dev/null || true
+                fi
+            fi
+        done
+        ;;
+esac
+
+exit 0
+

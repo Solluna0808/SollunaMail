@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>SollunaMail</Name>
+    <Version>1.0.0</Version>
+    <Title>Solluna Mail Program Installer</Title>
+    <Publisher>Solluna Systems</Publisher>
+
+    <InstallerWindowIcon>solluna_icon</InstallerWindowIcon>
+    <InstallerApplicationIcon>solluna_icon</InstallerApplicationIcon>
+    <Logo>solluna_logo.png</Logo>
+    <WizardDefaultWidth>760</WizardDefaultWidth>
+    <WizardDefaultHeight>540</WizardDefaultHeight>
+
+    <AllowNonAsciiCharacters>true</AllowNonAsciiCharacters>
+    <ControlScript>controller.qs</ControlScript>
+
+    <StartMenuDir>Solluna Mail</StartMenuDir>
+    <MaintenanceToolName>SollunaMailMaintenanceTool</MaintenanceToolName>
+    <TargetDir>@HomeDir@/AppData/Local/SOLLUNA_MAIL</TargetDir>
+    <AdminTargetDir>@ApplicationsDir@/SOLLUNA_MAIL</AdminTargetDir>
+    <WizardStyle>Modern</WizardStyle>
+</Installer>

@@ -1,0 +1,50 @@
+====================================================================
+ SollunaMail macOS (.dmg) 완전 독립형(Self-Contained) 인스톨 패키지 가이드
+====================================================================
+
+* 본 패키지(SollunaMail_1.0.0_macOS.dmg)는 macdeployqt를 통해
+  Qt 6.12.0 프레임워크(QtCore, QtGui, QtWidgets, QtNetwork, QtWebEngineCore 등),
+  macOS Cocoa/TLS/이미지 플러그인, Chromium 렌더러(QtWebEngineProcess.app),
+  고해상도 앱 아이콘(solluna_icon.icns), 내장 다국어 폰트(Contents/Resources/fonts)가
+  모두 SollunaMail.app 내부에 완전 내장된 Self-Contained 패키지입니다.
+  따라서 Qt가 설치되지 않은 일반 Mac에서도 즉시 설치 및 실행됩니다.
+
+1. .dmg 인스톨 패키지 생성 방법
+--------------------------------------------------------------------
+  cd /Users/icsly0808/Work/Git/SollunaMail/Mac_Install
+  chmod +x build_dmg.sh
+  ./build_dmg.sh
+
+
+2. 설치 및 업그레이드 방법 (Drag & Drop / In-Place Upgrade 지원)
+--------------------------------------------------------------------
+  1) SollunaMail_1.0.0_macOS.dmg 파일을 더블클릭하여 마운트합니다.
+  2) 열린 창에서 "SollunaMail.app" 아이콘을 옆의 "Applications" 폴더로
+     드래그 앤 드롭합니다.
+  3) 이미 이전 버전이 설치되어 있는 경우 Finder에서 "대치(Replace)"를 선택하면
+     기존 계정(~/Library/Application Support/Solluna IoT/SollunaMail/config_set)과
+     메일·캘린더·주소록 캐시(cache/)는 100% 그대로 보존된 채 프로그램만 업그레이드됩니다.
+
+
+3. 실행 방법 및 사용자 데이터 위치
+--------------------------------------------------------------------
+  - Launchpad 또는 Finder > 응용 프로그램(Applications) > "SollunaMail" 실행
+  - 사용자 설정 및 캐시 저장 위치:
+    ~/Library/Application Support/Solluna IoT/SollunaMail/
+    ├── config_set/ (accounts.json, app_settings.json)
+    ├── cache/      (conversations_cache.json, calendars_cache.json, contacts_cache.json)
+    ├── pop3/       (POP3 계정 로컬 메일함)
+    └── Backup/     (언인스톨 시 자동 백업 보관 폴더)
+
+
+4. 제거 (Uninstall) 및 백업 복구 방법
+--------------------------------------------------------------------
+  - DMG 내부에 포함된 "Uninstall_SollunaMail.command"를 실행하면:
+    1) 실행 중인 SollunaMail을 안전하게 종료하고,
+    2) 기존 계정과 메일 캐시를 Backup/ 폴더로 자동 백업한 뒤,
+    3) 자동 실행 설정(~/Library/LaunchAgents/com.solluna.mail.plist)과
+       /Applications/SollunaMail.app을 깔끔하게 제거합니다.
+  - 추후 재설치 후 처음 실행하면 백업 데이터를 감지하여
+    "백업 파일이 있습니다. 복구하시겠습니까?" 안내 창이 자동으로 표시됩니다.
+====================================================================
+

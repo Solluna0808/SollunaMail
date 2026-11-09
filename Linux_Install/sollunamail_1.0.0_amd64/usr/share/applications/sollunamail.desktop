@@ -1,0 +1,16 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SollunaMail
+GenericName=Email Client
+GenericName[ko]=이메일 클라이언트
+Comment=SollunaMail Cross-Platform Email, Calendar & Contacts Client
+Comment[ko]=SollunaMail 통합 이메일 · 캘린더 · 주소록 클라이언트
+Exec=/opt/SollunaMail/sollunamail-launcher.sh %U
+Icon=sollunamail
+Terminal=false
+Categories=Network;Email;Office;Qt;
+MimeType=x-scheme-handler/mailto;
+StartupNotify=true
+StartupWMClass=SollunaMail
+Keywords=Mail;Email;E-Mail;IMAP;POP3;Calendar;Contacts;SollunaMail;

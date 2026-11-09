@@ -36,7 +36,17 @@ SollunaMail/cache/
 pop3/
 SollunaMail/pop3/
 
-# Linux Debian Package Build Artifacts (>100MB; upload .deb to GitHub Releases instead)
+# Installer Package Build Artifacts (>100MB; upload .exe / .dmg / .deb to GitHub Releases instead)
 Linux_Install/*.deb
 Linux_Install/pkg_root/
+Linux_Install/sollunamail_1.0.0_amd64/opt/
+Mac_Install/*.dmg
+QtInstallerFramework/*.exe
+QtInstallerFramework/**/data/
 *.deb
+*.dmg
+*.exe
+*.dll
+*.so
+*.so.*
+*.dylib

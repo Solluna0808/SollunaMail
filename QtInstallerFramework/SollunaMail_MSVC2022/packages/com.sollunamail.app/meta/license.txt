@@ -1,0 +1,5 @@
+SollunaMail 소프트웨어 사용권 계약서 (License Agreement)
+
+본 소프트웨어(SollunaMail)는 Solluna Systems에서 제공하는 통합 이메일 및 캘린더 클라이언트 프로그램입니다.
+Do you agree to use Solluna's Mail program?
+위 사용 조건에 동의하시면 설치를 계속 진행해 주십시오.

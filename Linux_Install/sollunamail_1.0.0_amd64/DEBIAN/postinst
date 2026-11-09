@@ -1,0 +1,27 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        chmod 755 /opt/SollunaMail/SollunaMail 2>/dev/null || true
+        chmod 755 /opt/SollunaMail/sollunamail-launcher.sh 2>/dev/null || true
+        chmod 755 /opt/SollunaMail/libexec/QtWebEngineProcess 2>/dev/null || true
+
+        # Register bundled Qt6 & ICU shared libraries with dynamic linker for clean Linux systems
+        echo "/opt/SollunaMail/lib" > /etc/ld.so.conf.d/sollunamail.conf
+        if command -v ldconfig >/dev/null 2>&1; then
+            ldconfig || true
+        fi
+
+        ln -sf /opt/SollunaMail/sollunamail-launcher.sh /usr/bin/sollunamail
+
+        if command -v update-desktop-database >/dev/null 2>&1; then
+            update-desktop-database -q /usr/share/applications || true
+        fi
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+            gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor || true
+        fi
+        ;;
+esac
+
+exit 0

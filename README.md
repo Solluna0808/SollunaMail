@@ -39,8 +39,17 @@ SollunaMail/
 │   ├── customwidgets.h / .cpp
 │   ├── mailmodels.h
 │   └── mailtheme.h / .cpp
-└── Linux_Install/                # Linux Debian (.deb) 자립형 설치 패키지 생성 도구
+├── QtInstallerFramework/         # Windows 설치 프로그램(SollunaMail_Installer.exe) 구성 스크립트 (Qt IFW)
+│   ├── how_to_make_install_file.txt
+│   └── SollunaMail_MSVC2022/
+│       ├── config/               # config.xml, controller.qs, 아이콘/로고
+│       └── packages/com.sollunamail.app/meta/ # package.xml, installscripts.qs, UI
+├── Mac_Install/                  # macOS 디스크 이미지(SollunaMail_1.0.0_macOS.dmg) 자동 빌드 도구
+│   ├── build_dmg.sh              # macdeployqt + codesign + hdiutil 기반 .dmg 생성 스크립트
+│   └── how_to_make_dmg.txt       # macOS 패키지 생성 및 설치 안내서
+└── Linux_Install/                # Linux Debian (sollunamail_1.0.0_amd64.deb) 자립형 설치 패키지 생성 도구
     ├── build_deb.sh              # Qt 6 런타임 포함 .deb 패키지 자동 빌드 스크립트
+    ├── how_to_make_deb.txt
     └── README.md                 # 리눅스 패키지 생성 및 설치 안내서
 ```
 
@@ -67,9 +76,23 @@ cmake -S SollunaMail -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
 ```
 
-### 4. Linux Debian (`.deb`) 설치 패키지 생성
-Linux Release 빌드 완료 후 아래 스크립트를 실행하면 Qt 6 공유 라이브러리와 플러그인이 모두 번들링된 자립형 `.deb` 설치 파일이 생성됩니다:
+---
 
+## 운영체제별 설치 패키지 생성 (Installer Packaging)
+
+### 1. Windows (`SollunaMail_Installer.exe` — Qt Installer Framework)
+`windeployqt`로 배포 파일들을 `packages/com.sollunamail.app/data/`에 배치한 뒤 Qt IFW의 `binarycreator.exe`를 실행합니다. 자세한 절차는 [`QtInstallerFramework/how_to_make_install_file.txt`](QtInstallerFramework/how_to_make_install_file.txt)를 참고하세요.
+
+### 2. macOS (`SollunaMail_1.0.0_macOS.dmg`)
+macOS 환경에서 아래 스크립트를 실행하면 `macdeployqt`, 코드 서명(`codesign`), `hdiutil` 압축까지 자동으로 수행되어 자립형 `.dmg` 이미지가 생성됩니다:
+```bash
+cd Mac_Install
+./build_dmg.sh
+```
+자세한 내용은 [`Mac_Install/how_to_make_dmg.txt`](Mac_Install/how_to_make_dmg.txt)를 참고하세요.
+
+### 3. Linux Debian (`sollunamail_1.0.0_amd64.deb`)
+Linux Release 빌드 완료 후 아래 스크립트를 실행하면 Qt 6 공유 라이브러리와 플러그인이 모두 번들링된 자립형 `.deb` 설치 파일이 생성됩니다:
 ```bash
 cd Linux_Install
 ./build_deb.sh /path/to/Release/build/dir

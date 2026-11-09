@@ -1,0 +1,15 @@
+Package: sollunamail
+Version: 1.0.0
+Section: mail
+Priority: optional
+Architecture: amd64
+Installed-Size: 468612
+Depends: libc6 (>= 2.34), libstdc++6 (>= 12), libgcc-s1, libx11-6, libxcb1, libdbus-1-3, libfontconfig1, libfreetype6
+Maintainer: Solluna IoT <support@solluna-iot.com>
+Homepage: https://solluna-iot.com
+Description: SollunaMail Cross-Platform Email, Calendar and Contacts Client (Self-Contained)
+ SollunaMail is a modern Qt 6 desktop email client supporting Google OAuth 2.0,
+ Apple iCloud (IMAP & CalDAV), Microsoft Outlook, Naver, Daum/Kakao, and
+ custom IMAP/POP3/SMTP servers with integrated Calendar, Contacts, Privacy Hub,
+ and Gemini / Codex AI assistance.
+ Includes bundled Qt 6 runtime libraries, TLS/Platform plugins, and Chromium WebEngine.

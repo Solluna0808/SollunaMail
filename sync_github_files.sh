@@ -17,7 +17,11 @@ echo " - 대상 경로 : ${GITHUB_DIR}"
 echo "=================================================================="
 
 mkdir -p "${GITHUB_DIR}/SollunaMail"
-mkdir -p "${GITHUB_DIR}/Linux_Install"
+mkdir -p "${GITHUB_DIR}/Linux_Install/sollunamail_1.0.0_amd64/DEBIAN"
+mkdir -p "${GITHUB_DIR}/Linux_Install/sollunamail_1.0.0_amd64/usr/share/applications"
+mkdir -p "${GITHUB_DIR}/Mac_Install"
+mkdir -p "${GITHUB_DIR}/QtInstallerFramework/SollunaMail_MSVC2022/config"
+mkdir -p "${GITHUB_DIR}/QtInstallerFramework/SollunaMail_MSVC2022/packages/com.sollunamail.app/meta"
 
 # 1. 화이트리스트(Whitelist) 기반 SollunaMail 핵심 소스 및 리소스만 복사
 SOURCE_FILES=(
@@ -62,22 +66,64 @@ if [[ -f "${PROJECT_ROOT}/SollunaMail/solluna_icon.icns" ]]; then
     COPIED_COUNT=$((COPIED_COUNT + 1))
 fi
 
-# 2. Linux_Install 폴더는 스크립트(build_deb.sh)와 문서(README.md)만 복사 (.deb 및 pkg_root 절대 제외)
+# 2. Linux_Install 폴더: 스크립트, 가이드, DEBIAN 제어 스크립트, .desktop 런처만 복사 (.deb 및 opt 번들 제외)
 cp -f "${PROJECT_ROOT}/Linux_Install/build_deb.sh" "${GITHUB_DIR}/Linux_Install/build_deb.sh"
 chmod 755 "${GITHUB_DIR}/Linux_Install/build_deb.sh"
-if [[ -f "${PROJECT_ROOT}/Linux_Install/README.md" ]]; then
-    cp -f "${PROJECT_ROOT}/Linux_Install/README.md" "${GITHUB_DIR}/Linux_Install/README.md"
+for lf in "README.md" "how_to_make_deb.txt"; do
+    if [[ -f "${PROJECT_ROOT}/Linux_Install/${lf}" ]]; then
+        cp -f "${PROJECT_ROOT}/Linux_Install/${lf}" "${GITHUB_DIR}/Linux_Install/${lf}"
+    fi
+done
+for df in "control" "preinst" "postinst" "prerm" "postrm"; do
+    if [[ -f "${PROJECT_ROOT}/Linux_Install/sollunamail_1.0.0_amd64/DEBIAN/${df}" ]]; then
+        cp -f "${PROJECT_ROOT}/Linux_Install/sollunamail_1.0.0_amd64/DEBIAN/${df}" \
+              "${GITHUB_DIR}/Linux_Install/sollunamail_1.0.0_amd64/DEBIAN/${df}"
+    fi
+done
+if [[ -f "${PROJECT_ROOT}/Linux_Install/sollunamail_1.0.0_amd64/usr/share/applications/sollunamail.desktop" ]]; then
+    cp -f "${PROJECT_ROOT}/Linux_Install/sollunamail_1.0.0_amd64/usr/share/applications/sollunamail.desktop" \
+          "${GITHUB_DIR}/Linux_Install/sollunamail_1.0.0_amd64/usr/share/applications/sollunamail.desktop"
 fi
 
-# 3. 혹시라도 실수로 들어갔을 수 있는 보안/대용량 파일 강제 삭제 (이중 안전장치)
+# 3. Mac_Install 폴더: 스크립트(build_dmg.sh)와 가이드(how_to_make_dmg.txt)만 복사 (.dmg 파일 제외)
+for mf in "build_dmg.sh" "how_to_make_dmg.txt"; do
+    if [[ -f "${PROJECT_ROOT}/Mac_Install/${mf}" ]]; then
+        cp -f "${PROJECT_ROOT}/Mac_Install/${mf}" "${GITHUB_DIR}/Mac_Install/${mf}"
+    fi
+done
+[[ -f "${GITHUB_DIR}/Mac_Install/build_dmg.sh" ]] && chmod 755 "${GITHUB_DIR}/Mac_Install/build_dmg.sh"
+
+# 4. Windows 인스톨러(QtInstallerFramework): config 및 meta 설정/스크립트만 복사 (.exe 및 data/ 바이너리 제외)
+if [[ -f "${PROJECT_ROOT}/QtInstallerFramework/how_to_make_install_file.txt" ]]; then
+    cp -f "${PROJECT_ROOT}/QtInstallerFramework/how_to_make_install_file.txt" \
+          "${GITHUB_DIR}/QtInstallerFramework/how_to_make_install_file.txt"
+fi
+for wf in "config.xml" "controller.qs" "solluna_icon.ico" "solluna_logo.png"; do
+    if [[ -f "${PROJECT_ROOT}/QtInstallerFramework/SollunaMail_MSVC2022/config/${wf}" ]]; then
+        cp -f "${PROJECT_ROOT}/QtInstallerFramework/SollunaMail_MSVC2022/config/${wf}" \
+              "${GITHUB_DIR}/QtInstallerFramework/SollunaMail_MSVC2022/config/${wf}"
+    fi
+done
+for pf in "package.xml" "installscripts.qs" "license.txt" "PerUserMachinePage.ui" "LaunchOptionPage.ui"; do
+    if [[ -f "${PROJECT_ROOT}/QtInstallerFramework/SollunaMail_MSVC2022/packages/com.sollunamail.app/meta/${pf}" ]]; then
+        cp -f "${PROJECT_ROOT}/QtInstallerFramework/SollunaMail_MSVC2022/packages/com.sollunamail.app/meta/${pf}" \
+              "${GITHUB_DIR}/QtInstallerFramework/SollunaMail_MSVC2022/packages/com.sollunamail.app/meta/${pf}"
+    fi
+done
+
+# 5. 혹시라도 실수로 들어갔을 수 있는 보안/대용량 파일 강제 삭제 (이중 안전장치)
 rm -f "${GITHUB_DIR}/oauth_secrets_local.h"
 rm -f "${GITHUB_DIR}/SollunaMail/oauth_secrets_local.h"
 rm -rf "${GITHUB_DIR}/Linux_Install/pkg_root"
+rm -rf "${GITHUB_DIR}/Linux_Install/sollunamail_1.0.0_amd64/opt"
 rm -f "${GITHUB_DIR}/Linux_Install/"*.deb
+rm -f "${GITHUB_DIR}/Mac_Install/"*.dmg
+rm -f "${GITHUB_DIR}/QtInstallerFramework/"*.exe
+rm -rf "${GITHUB_DIR}/QtInstallerFramework/SollunaMail_MSVC2022/packages/com.sollunamail.app/data"
 
-# 4. 보안 및 용량 자동 검증
+# 6. 보안 및 용량 자동 검증
 echo "------------------------------------------------------------------"
-echo " [검증 1] 복사된 소스 파일 수 : ${COPIED_COUNT} 개 (+ Linux_Install 2개)"
+echo " [검증 1] 복사된 소스 파일 수 : ${COPIED_COUNT} 개 (+ Windows / macOS / Linux 인스톨러 스크립트·설정)"
 if find "${GITHUB_DIR}" -name "oauth_secrets_local.h" | grep -q .; then
     echo " [오류] 보안 파일(oauth_secrets_local.h)이 감지되었습니다! 중단합니다."
     exit 1

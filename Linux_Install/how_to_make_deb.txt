@@ -1,0 +1,44 @@
+====================================================================
+ SollunaMail Linux (.deb) 완전 독립형(Self-Contained) 인스톨 패키지 가이드
+====================================================================
+
+* 본 패키지(sollunamail_1.0.0_amd64.deb)는 Qt 6.10 런타임 라이브러리(lib/),
+  필수 플러그인(plugins/platforms, tls, imageformats, wayland 등),
+  Chromium 엔진(libexec/QtWebEngineProcess, resources/), 내장 폰트(fonts/)가
+  모두 패키지 내부(/opt/SollunaMail)에 포함된 Self-Contained 패키지입니다.
+  따라서 Qt6가 전혀 설치되지 않은 기본(순정) 리눅스 PC에서도 별도 의존성 설치 없이
+  즉시 설치 및 실행됩니다.
+
+1. .deb 인스톨 패키지 생성 방법
+--------------------------------------------------------------------
+  cd /opt/Git/SollunaMail/Linux_Install
+  ./build_deb.sh
+
+
+2. 패키지 설치 및 업그레이드 방법 (In-Place Upgrade 지원)
+--------------------------------------------------------------------
+- 기본 리눅스 PC에서 바로 설치 (오프라인/폐쇄망에서도 가능):
+  sudo dpkg -i sollunamail_1.0.0_amd64.deb
+  (또는 sudo apt install ./sollunamail_1.0.0_amd64.deb)
+
+  * 이미 설치된 상태에서 다시 실행하면 실행 중인 SollunaMail을 자동 종료하고,
+    기존 계정 및 메일 캐시를 보존한 채 프로그램만 업그레이드합니다.
+
+
+3. 실행 방법
+--------------------------------------------------------------------
+- 앱 메뉴(애플리케이션 목록)에서 "SollunaMail" 아이콘 클릭
+- 또는 터미널에서:
+  sollunamail
+  (실제 설치 경로: /opt/SollunaMail/sollunamail-launcher.sh -> /opt/SollunaMail/SollunaMail)
+
+
+4. 패키지 제거 (Uninstall) 방법
+--------------------------------------------------------------------
+- 프로그램 제거 (기존 계정·메일 데이터는 ~/.local/share/Solluna IoT/SollunaMail/Backup 에 자동 백업되어 재설치 시 복구 가능):
+  sudo dpkg -r sollunamail
+  (또는 sudo apt remove sollunamail)
+
+- 완전 제거:
+  sudo dpkg -P sollunamail
+====================================================================

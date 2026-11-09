@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>SollunaMail</DisplayName>
+    <Description>Solluna Mail Program (Gmail · iCloud · Naver · Kakao · IMAP · POP3 통합 메일 및 캘린더 클라이언트)</Description>
+    <Version>1.0.0</Version>
+    <ReleaseDate>2026-11-04</ReleaseDate>
+
+    <Licenses>
+        <License name="License Agreement" file="license.txt" />
+    </Licenses>
+
+    <Default>true</Default>
+    <ForcedInstallation>false</ForcedInstallation>
+    <!-- 컴포넌트 스크립트 -->
+    <Script>installscripts.qs</Script>
+
+    <!-- 동적 UI 등록 -->
+    <UserInterfaces>
+        <UserInterface>PerUserMachinePage.ui</UserInterface>
+        <UserInterface>LaunchOptionPage.ui</UserInterface>
+    </UserInterfaces>
+    <SortingPriority>100</SortingPriority>
+    <Name>com.sollunamail.app</Name>
+</Package>
