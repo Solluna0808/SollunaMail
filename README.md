@@ -71,7 +71,8 @@ SollunaMail/
 │   ├── build_deb.sh              # Qt 6 런타임 포함 .deb 패키지 자동 빌드 스크립트
 │   ├── how_to_make_deb.txt
 │   └── README.md                 # 리눅스 패키지 생성 및 설치 안내서
-└── screenshots/                  # README 문서용 애플리케이션 실행 스크린샷
+├── screenshots/                  # README 문서용 애플리케이션 실행 스크린샷
+└── LICENSE                       # MIT 오픈소스 라이선스
 ```
 
 ---
@@ -119,3 +120,13 @@ cd Linux_Install
 ./build_deb.sh /path/to/Release/build/dir
 ```
 자세한 내용은 [`Linux_Install/README.md`](Linux_Install/README.md)를 참고하세요.
+
+---
+
+## 라이선스 (License)
+
+본 프로젝트(**SollunaMail**)는 **[MIT License](LICENSE)** 하에 배포됩니다.
+
+- 누구나 본 소프트웨어를 자유롭게 사용, 복제, **수정**, 병합, 게시 및 재배포할 수 있습니다.
+- 단, **소스코드를 수정하여 사용하거나 재배포할 경우 반드시 원저작자(`Copyright (c) 2026 Solluna0808`) 출처 표기와 [`LICENSE`](LICENSE) 전문을 포함**해야 합니다.
+- 본 소프트웨어는 Qt 6 오픈소스 라이브러리(LGPL v3, 동적 링크)를 사용합니다.
