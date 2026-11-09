@@ -1,0 +1,42 @@
+# CMake & Qt Creator Build Directories
+SollunaMail/build/
+build/
+**/build/
+
+# Compiler & Linker Intermediate Files
+*.o
+*.obj
+*.pdb
+*.ilk
+*.pch
+*.idb
+*.exp
+*.tlog
+*.log
+
+# Qt Creator / IDE User Settings
+*.pro.user*
+CMakeLists.txt.user*
+.qtcreator/
+SollunaMail/.qtcreator/
+
+# Temporary Backup Directories
+backup_*/
+AGY_HISTORY.md
+HISTORY.md
+
+# Local OAuth 2.0 Secrets & Runtime Account/Mail Data (Never commit to Git)
+oauth_secrets_local.h
+SollunaMail/oauth_secrets_local.h
+**/oauth_secrets_local.h
+config_set/
+SollunaMail/config_set/
+cache/
+SollunaMail/cache/
+pop3/
+SollunaMail/pop3/
+
+# Linux Debian Package Build Artifacts (>100MB; upload .deb to GitHub Releases instead)
+Linux_Install/*.deb
+Linux_Install/pkg_root/
+*.deb
