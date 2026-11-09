@@ -2228,7 +2228,7 @@ void MainWindow::setupMainLayout()
     m_centerStack->addWidget(buildFullContactsPage());  // Index 2
     rootH->addWidget(m_centerStack, 1);
 
-    // 4. Far-Right Narrow App Strip (38px, Screenshot 1, 2, 3)
+    // 4. Far-Right Narrow App Strip (38px)
     rootH->addWidget(buildFarRightAppStrip());
 }
 
@@ -2297,7 +2297,7 @@ QWidget *MainWindow::buildLeftBar()
         "privacy_shield",
         MailI18n::t("Privacy Hub 열기", "Open Privacy Hub", "プライバシーハブを開く"));
     connect(btnPrivacy, &QToolButton::clicked, this, [this]() {
-        onOpenSettingsModal(3); // Opens Privacy Hub directly (Screenshot 3)
+        onOpenSettingsModal(3); // Opens Privacy Hub directly
     });
 
     QToolButton *btnSettings = makeBottomIconBtn(
@@ -2808,7 +2808,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
         }
     };
 
-    // Mailbird-style ⋮ Dropdown Menu (media_1793670696387_7ff36f80.png / media_1793683527673_1ac1fcfe.jpg)
+    // Folder & Message List ⋮ Dropdown Menu
     connect(btnMore, &QToolButton::clicked, this, [this, btnMore, populateMoveToFolderMenu]() {
         QMenu menu(this);
         menu.setStyleSheet(
@@ -3142,7 +3142,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
     });
     connect(btnRefresh, &QToolButton::clicked, this, &MainWindow::onRefreshAndSyncCurrentAccount);
 
-    // Conversation List (Mailbird 방식 QStyledItemDelegate 60FPS 가상화 뷰포트 + 자동 스크롤 점프 방지)
+    // Conversation List (QStyledItemDelegate 60FPS 가상화 뷰포트 + 자동 스크롤 점프 방지)
     m_convListWidget = new QListWidget(convPane);
     m_convListWidget->setFrameShape(QFrame::NoFrame);
     m_convListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -3272,7 +3272,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
     convV->addWidget(m_convListWidget, 1);
 
     // ------------------------------------------------------------------------
-    // 하단 1,000개 단위 페이지네이션 바 (media_1793810205604_af4dc3e3.png: « ‹ [1] 2 3 4 5 › »)
+    // 하단 페이지네이션 바 (« ‹ [1] 2 3 4 5 › »)
     // ------------------------------------------------------------------------
     m_mailPaginationBar = new QWidget(convPane);
     m_mailPaginationBar->setObjectName("mailPaginationBar");
@@ -3363,7 +3363,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
     m_mailSplitLayout->addWidget(convPane);
 
     // ------------------------------------------------------------------------
-    // B. Center Message Reading Pane (Screenshot 1)
+    // B. Center Message Reading Pane
     // ------------------------------------------------------------------------
     QWidget *readingPane = new QWidget(mailSplitContainer);
     readingPane->setObjectName("readingPane");
@@ -3707,7 +3707,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
     sepLine->setStyleSheet("color: #F1F5F9;");
     readV->addWidget(sepLine);
 
-    // Sender Info Bar (Avatar + "Mailbird Team to 나 v" + [Unsubscribe] + [Block sender] + Timestamp + ⋮)
+    // Sender Info Bar (Avatar + Sender/Recipient + [Unsubscribe] + [Block sender] + Timestamp + ⋮)
     QHBoxLayout *senderRow = new QHBoxLayout();
     senderRow->setContentsMargins(0, 6, 0, 6);
     senderRow->setSpacing(10);
@@ -3716,7 +3716,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
     m_readingAvatarLbl->setFixedSize(28, 28);
     senderRow->addWidget(m_readingAvatarLbl);
 
-    m_readingSenderLbl = new QLabel("<b>Mailbird Team</b> <span style='color:#6B7280;'>to 나 ⌄</span>", readingPane);
+    m_readingSenderLbl = new QLabel("<b>SollunaMail Team</b> <span style='color:#6B7280;'>to 나 ⌄</span>", readingPane);
     m_readingSenderLbl->setStyleSheet("font-size: 12px; color: #1F2937;");
     senderRow->addWidget(m_readingSenderLbl);
 
@@ -3809,7 +3809,7 @@ QWidget *MainWindow::buildMailWorkspacePage()
     outerH->addWidget(mailSplitContainer, 1);
 
     // ------------------------------------------------------------------------
-    // C. Right Docked Calendar Day Sidebar (312px, Screenshot 1)
+    // C. Right Docked Calendar Day Sidebar (228px)
     // ------------------------------------------------------------------------
     m_rightCalendarSidebar = buildRightDockedCalendarSidebar();
     outerH->addWidget(m_rightCalendarSidebar);
@@ -3934,7 +3934,7 @@ QWidget *MainWindow::buildRightDockedCalendarSidebar()
 
 QWidget *MainWindow::buildFullCalendarPage()
 {
-    // Exact replication of Screenshot 2 (media_1793638565408_d1b16009.png)
+    // Full-screen calendar workspace layout
     QWidget *page = new QWidget(this);
     page->setStyleSheet("background-color: #FFFFFF;");
     QVBoxLayout *rootV = new QVBoxLayout(page);
@@ -4108,7 +4108,7 @@ QWidget *MainWindow::buildFullCalendarPage()
 
     bodyH->addWidget(leftSub);
 
-    // Center 4-Mode Stack: [0] Month, [1] Week, [2] Day, [3] Agenda (Mailbird Screenshots 1..4)
+    // Center 4-Mode Stack: [0] Month, [1] Week, [2] Day, [3] Agenda
     m_fullCalViewStack = new QStackedWidget(page);
 
     auto syncSelectedDateAcrossViews = [this](const QDate &d) {
@@ -5295,7 +5295,7 @@ void MainWindow::updateMailPaginationBar()
                             QString("Page %1 (%2 - %3)").arg(pageNum).arg(rangeStart).arg(rangeEnd),
                             QString("%1ページ (%2〜%3件目)").arg(pageNum).arg(rangeStart).arg(rangeEnd)));
             if (pageNum == m_currentMailPage) {
-                // 선택된 페이지: 파란 라운드 테두리 + 파란 글씨 (media_1793810205604_af4dc3e3.png)
+                // 선택된 페이지: 파란 라운드 테두리 + 파란 글씨
                 btn->setStyleSheet(
                     "QPushButton {"
                     "  background-color: #FFFFFF;"
@@ -5482,7 +5482,7 @@ static QString renderRoundedCtaButtonDataUri(const QString &labelText,
 
     QColor bgCol(bgHexColor);
     if (!bgCol.isValid() || bgHexColor.compare(QStringLiteral("#414141"), Qt::CaseInsensitive) == 0) {
-        bgCol = QColor("#0F172A"); // Mailbird/ChatGPT 다크 캡슐 버튼 톤(#000000~#0F172A)
+        bgCol = QColor("#0F172A"); // 다크 캡슐 버튼 톤(#000000~#0F172A)
     }
 
     QImage img(btnW * dpr, btnH * dpr, QImage::Format_ARGB32_Premultiplied);
@@ -5707,7 +5707,7 @@ QString MainWindow::normalizeEmailHtmlForQtViewer(const QString &rawHtml,
 
     // 5. 배경색이 지정된 CTA 버튼 셀(<td bgcolor="#414141" ...><a ...>결제 업데이트하기</a></td>)은
     //    QPainter 고해상도(2x) 안티앨리어싱 둥근 캡슐(border-radius) 버튼 이미지로 렌더링하여
-    //    QTextBrowser에서도 파란 밑줄 없이 Mailbird와 동일한 둥근 캡슐 버튼 + 선명한 흰색 글씨로 표시
+    //    QTextBrowser에서도 파란 밑줄 없이 둥근 캡슐 버튼 + 선명한 흰색 글씨로 표시
     QStringList preservedButtons;
     static const QRegularExpression ctaTdRe(
         R"(<td\b([^>]*?(?:bgcolor\s*=\s*["']#[0-9a-fA-F]{3,6}["']|background(?:-color)?\s*:\s*#[0-9a-fA-F]{3,6})[^>]*?)>\s*(<a\b([^>]*)>([\s\S]*?)</a>)\s*</td\s*>)",
@@ -6826,7 +6826,7 @@ void MainWindow::onSelectFolder(const QString &folderId, const QString &folderDi
             }
 
             // 별표편지함(starred) 또는 중요편지함(important) 클릭 시:
-            // 일반 IMAP 서버(중요/별표 전용 서버 폴더 없음) 및 필터 설정으로 이동된 내 폴더(ICSLY0808-NAVER, Solluna 등)의
+            // 일반 IMAP 서버(중요/별표 전용 서버 폴더 없음) 및 필터 설정으로 이동된 사용자 정의 폴더의
             // 중요(❗)·별표(⭐) 메일이 100% 실시간 연동되도록 받은편지함(inbox)과 내 폴더(custom_*)도 함께 1페이지 조회
             if (folderId == QStringLiteral("starred") || folderId == QStringLiteral("important")) {
                 const QString inbKey = acc.id + QStringLiteral("|inbox");

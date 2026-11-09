@@ -2389,7 +2389,7 @@ QWidget *SettingsDialog::createAccountsPage()
     masterDetail->setSpacing(30);
 
     // =========================================================================
-    // [LEFT COLUMN] Mailbird Accounts Card List + [Add account] Button (275px)
+    // [LEFT COLUMN] Accounts Card List + [Add account] Button (275px)
     // =========================================================================
     QWidget *leftCol = new QWidget(page);
     leftCol->setFixedWidth(275);
@@ -2495,14 +2495,14 @@ QWidget *SettingsDialog::createAccountsPage()
     masterDetail->addWidget(leftCol, 0, Qt::AlignTop);
 
     // =========================================================================
-    // [RIGHT COLUMN] Mailbird 4 Sub-tabs: Account details | Aliases | Settings | Apps & services
+    // [RIGHT COLUMN] 4 Sub-tabs: Account details | Aliases | Settings | Apps & services
     // =========================================================================
     QWidget *rightCol = new QWidget(page);
     QVBoxLayout *rightV = new QVBoxLayout(rightCol);
     rightV->setContentsMargins(0, 0, 0, 0);
     rightV->setSpacing(18);
 
-    // Top Segmented Tab Bar (exact match to Mailbird Screenshot)
+    // Top Segmented Tab Bar
     QWidget *segBar = new QWidget(rightCol);
     segBar->setStyleSheet("background: #EBECEF; border-radius: 6px;");
     QHBoxLayout *segRow = new QHBoxLayout(segBar);
@@ -2610,7 +2610,7 @@ QWidget *SettingsDialog::createAccountsPage()
     uploadRow->addWidget(uploadHint, 1);
     detV->addLayout(uploadRow);
 
-    // 3x11 (33 icons) Mailbird Avatar Grid
+    // 3x11 (33 icons) Avatar Grid
     QWidget *gridBox = new QWidget(tabDetails);
     QGridLayout *avGrid = new QGridLayout(gridBox);
     avGrid->setContentsMargins(0, 4, 0, 4);
@@ -3179,7 +3179,7 @@ void SettingsDialog::refreshAccountsList()
         item->setData(Qt::UserRole, i);
         item->setSizeHint(QSize(268, 56));
 
-        // Mailbird Account Card Widget (Avatar 36x36 + Bold Name / Muted Email + '⋮' Menu Button)
+        // Account Card Widget (Avatar 36x36 + Bold Name / Muted Email + '⋮' Menu Button)
         QWidget *card = new QWidget(m_accountsListWidget);
         card->setStyleSheet("background: transparent;");
         QHBoxLayout *ch = new QHBoxLayout(card);
@@ -5049,7 +5049,7 @@ QWidget *SettingsDialog::createCalendarSettingsPage()
     v->setContentsMargins(36, 26, 36, 26);
     v->setSpacing(14);
 
-    // Header: Calendar icon + "Calendar" (Mailbird Screenshot 1:1)
+    // Header: Calendar icon + "Calendar"
     QHBoxLayout *hdrRow = new QHBoxLayout();
     hdrRow->setSpacing(8);
     QLabel *hdrIcon = new QLabel(page);
@@ -5062,7 +5062,7 @@ QWidget *SettingsDialog::createCalendarSettingsPage()
     v->addLayout(hdrRow);
     v->addSpacing(6);
 
-    // 1. Per-account Calendar Enable/Disable List (Mailbird Screenshot 1:1)
+    // 1. Per-account Calendar Enable/Disable List
     if (m_accounts) {
         for (int i = 0; i < m_accounts->size(); ++i) {
             const AccountItem &acc = m_accounts->at(i);
@@ -5118,7 +5118,7 @@ QWidget *SettingsDialog::createCalendarSettingsPage()
         }
     }
 
-    // 2. "Calendar appearance" section (Mailbird Screenshot 1:1)
+    // 2. "Calendar appearance" section
     v->addSpacing(10);
     QLabel *appHdr = new QLabel(
         MailI18n::t("Calendar appearance (캘린더 모양)", "Calendar appearance", "Calendar appearance (カレンダー外観)"),
@@ -5209,7 +5209,7 @@ QWidget *SettingsDialog::createCalendarSettingsPage()
     });
     v->addWidget(startDayCombo);
 
-    // 3. "Events" section (Mailbird Screenshot 1:1)
+    // 3. "Events" section
     v->addSpacing(14);
     QLabel *evHdr = new QLabel(
         MailI18n::t("Events (일정 기본값)", "Events", "Events (イベント)"),

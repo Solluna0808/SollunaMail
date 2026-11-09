@@ -69,7 +69,7 @@ public:
                             const QString &refreshToken = QString());
     void fetchAccountAvatar(const AccountItem &account);
 
-    // 3. Live IMAP / POP3 SSL Fetch & Folder Actions (Gmail imap.gmail.com:993 / Custom IMAP / POP3 / iCloud — Mailbird 방식 2단계 고속 스트리밍 & 온디맨드 본문 로드)
+    // 3. Live IMAP / POP3 SSL Fetch & Folder Actions (Gmail imap.gmail.com:993 / Custom IMAP / POP3 / iCloud — 2단계 고속 스트리밍 & 온디맨드 본문 로드)
     void fetchImapInbox(const AccountItem &account, int maxMessages = 200);
     void fetchImapFolder(const AccountItem &account, const QString &folderId, int maxMessages = 200, int endSeq = 0);
     void fetchPop3Inbox(const AccountItem &account, int maxMessages = 200, int endSeq = 0);

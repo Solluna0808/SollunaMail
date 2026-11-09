@@ -64,10 +64,10 @@ struct AccountItem {
     QString oauthRefreshToken;
     QString avatarUrl;                  // Google 프로필 사진 URL 또는 도메인 파비콘 URL
     QString avatarPngBase64;            // 다운로드된 프로필 사진/파비콘 PNG Base64 캐시
-    int avatarIconPreset = 0;           // 0 = 커스텀/파비콘/프로필 사진, 1 = Google 사진, 2 = 이니셜 배지('S'), 3..32 = Mailbird 33종 아이콘 그리드 프리셋
-    QString accountLabel;               // Mailbird Account label
+    int avatarIconPreset = 0;           // 0 = 커스텀/파비콘/프로필 사진, 1 = Google 사진, 2 = 이니셜 배지('S'), 3..32 = 33종 아이콘 그리드 프리셋
+    QString accountLabel;               // Account label
     bool includeInUnified = true;       // Include in unified account
-    bool calendarEnabled = true;        // Enable this account's calendar in Calendar view (Mailbird Settings > Calendar)
+    bool calendarEnabled = true;        // Enable this account's calendar in Calendar view
     bool useDifferentReplyTo = false;   // Use a different reply-to address
     QString replyToAddress;             // Reply-to email address
     QStringList aliases;                // Account aliases list
@@ -591,7 +591,7 @@ public:
         return s_sec;
     }
 
-    // Mailbird Appearance settings state
+    // Appearance settings state
     static QString &appearanceMode() {
         static QString s_mode = QStringLiteral("Light"); // "Light", "Dark"
         return s_mode;

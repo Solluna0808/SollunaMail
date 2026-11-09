@@ -10,7 +10,7 @@
 #include "mailmodels.h"
 #include "mailtheme.h"
 
-// 1. MailBird Privacy Hub / Settings Capsule Toggle Switch
+// 1. Privacy Hub / Settings Capsule Toggle Switch
 class ToggleSwitchWidget : public QWidget {
     Q_OBJECT
 public:
@@ -30,7 +30,7 @@ private:
     bool m_checked = false;
 };
 
-// 2. MailBird 3-Line Conversation Item Card (Screenshot 1)
+// 2. 3-Line Conversation Item Card
 class ConversationCardWidget : public QWidget {
     Q_OBJECT
 public:
@@ -55,7 +55,7 @@ private:
     bool m_privacyBlur = false;
 };
 
-// 2-B. MailBird Virtualized Conversation List Delegate (60FPS zero-widget virtual scrolling)
+// 2-B. Virtualized Conversation List Delegate (60FPS zero-widget virtual scrolling)
 class ConversationListDelegate : public QStyledItemDelegate {
     Q_OBJECT
 public:
@@ -103,7 +103,7 @@ private:
     QString m_searchQuery;
 };
 
-// 4. Mini Month Calendar Widget for Full Calendar Left Sidebar (Screenshot 2)
+// 4. Mini Month Calendar Widget for Full Calendar Left Sidebar
 class MiniMonthCalendarWidget : public QWidget {
     Q_OBJECT
 public:
@@ -129,7 +129,7 @@ private:
     QDate m_selectedDate = QDate::currentDate();
 };
 
-// 5. Full-Screen Calendar Month Grid Widget (Mailbird Month View)
+// 5. Full-Screen Calendar Month Grid Widget (Month View)
 class MonthCalendarGridWidget : public QWidget {
     Q_OBJECT
 public:
@@ -160,7 +160,7 @@ private:
     QString m_searchQuery;
 };
 
-// 6. Full-Screen Calendar Week View Widget (Mailbird Week View: 7-day header + All day row + 24h 7-col timeline)
+// 6. Full-Screen Calendar Week View Widget (7-day header + All day row + 24h 7-col timeline)
 class WeekCalendarViewWidget : public QWidget {
     Q_OBJECT
 public:
@@ -183,7 +183,7 @@ private:
     QWidget *m_gridCanvas = nullptr;
 };
 
-// 7. Full-Screen Calendar Day View Widget (Mailbird Day View: Single-day header + All day row + 24h timeline)
+// 7. Full-Screen Calendar Day View Widget (Single-day header + All day row + 24h timeline)
 class DayCalendarViewWidget : public QWidget {
     Q_OBJECT
 public:
@@ -205,7 +205,7 @@ private:
     DayTimelineWidget *m_timeline = nullptr;
 };
 
-// 8. Full-Screen Calendar Agenda View Widget (Mailbird Agenda View: Date groups + 3px color bar + title & time)
+// 8. Full-Screen Calendar Agenda View Widget (Date groups + 3px color bar + title & time)
 class AgendaCalendarViewWidget : public QWidget {
     Q_OBJECT
 public:

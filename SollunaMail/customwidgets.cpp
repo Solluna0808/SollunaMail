@@ -133,7 +133,7 @@ void drawMailEnvelopeStatusIcon(QPainter *p,
         p->setBrush(Qt::NoBrush);
         p->drawPath(flap);
     } else {
-        // 읽은 편지: 위쪽 덮개가 열린 편지 봉투 아이콘 (media_1793860809996_d069abca.png)
+        // 읽은 편지: 위쪽 덮개가 열린 편지 봉투 아이콘
         const QColor envStroke = selected ? QColor("#DBEAFE") : QColor("#94A3B8");
         const QColor envFill   = selected ? QColor(255, 255, 255, 18) : QColor("#FFFFFF");
         p->setPen(QPen(envStroke, 1.3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -160,7 +160,7 @@ void drawMailEnvelopeStatusIcon(QPainter *p,
         p->drawPath(innerV);
     }
 
-    // 답장 완료 표시: 봉투 좌측 하단 빨간색 왼쪽 화살표 (⬅, media_1793860809996_d069abca.png 3번째 행)
+    // 답장 완료 표시: 봉투 좌측 하단 빨간색 왼쪽 화살표 (⬅)
     if (isReplied) {
         QPainterPath leftArr;
         leftArr.moveTo(ox - 0.5, oy + 13.5); // 화살표 끝점(좌측)
@@ -275,7 +275,7 @@ void ToggleSwitchWidget::paintEvent(QPaintEvent *)
 
     if (m_checked) {
         p.setPen(Qt::NoPen);
-        p.setBrush(QColor("#1B4EA3")); // Exact MailBird Privacy Hub toggle blue
+        p.setBrush(QColor("#1B4EA3")); // Privacy Hub toggle blue
         p.drawRoundedRect(trackRect, radius, radius);
 
         p.setBrush(QColor("#FFFFFF"));
@@ -923,7 +923,7 @@ void MiniMonthCalendarWidget::mousePressEvent(QMouseEvent *event)
 }
 
 // ============================================================================
-// 5. MonthCalendarGridWidget (Mailbird Month View - Sunday/Monday & Week# aware)
+// 5. MonthCalendarGridWidget (Month View - Sunday/Monday & Week# aware)
 // ============================================================================
 MonthCalendarGridWidget::MonthCalendarGridWidget(QWidget *parent)
     : QWidget(parent)
@@ -1026,7 +1026,7 @@ void MonthCalendarGridWidget::paintEvent(QPaintEvent *)
             p.setPen(QPen(QColor("#F1F5F9"), 1.0));
             p.drawRect(cellRect);
 
-            // Day number in top-right of cell (Mailbird Screenshot 1)
+            // Day number in top-right of cell
             bool isSelected = (d == m_selectedDate);
             bool isCurrentMonth = (d.month() == m_month);
 
@@ -1157,7 +1157,7 @@ void MonthCalendarGridWidget::mouseDoubleClickEvent(QMouseEvent *event)
 }
 
 // ============================================================================
-// 6. WeekCalendarViewWidget (Mailbird Week View Screenshot 2:
+// 6. WeekCalendarViewWidget (Week View:
 //    Top 7-day header with blue circle + "All day" row + 24h 7-col timeline
 //    with red badge "1:00", dashed red line, and solid red line with ticks)
 // ============================================================================
@@ -1417,7 +1417,7 @@ protected:
             }
         }
 
-        // Mailbird Week View Red Current-Time Marker (real-time system clock)
+        // Week View Red Current-Time Marker (real-time system clock)
         const QTime markerTime = QTime::currentTime();
         int totalMins = markerTime.hour() * 60 + markerTime.minute();
         qreal markerY = topOffset + (totalMins / 60.0) * hourHeight;
@@ -1565,7 +1565,7 @@ void WeekCalendarViewWidget::setSearchFilter(const QString &query)
 }
 
 // ============================================================================
-// 7. DayCalendarViewWidget (Mailbird Day View Screenshot 3:
+// 7. DayCalendarViewWidget (Day View:
 //    Single-day centered header + "All day" row + 24h DayTimelineWidget)
 // ============================================================================
 namespace {
@@ -1735,7 +1735,7 @@ void DayCalendarViewWidget::setSearchFilter(const QString &query)
 }
 
 // ============================================================================
-// 8. AgendaCalendarViewWidget (Mailbird Agenda View Screenshot 4:
+// 8. AgendaCalendarViewWidget (Agenda View:
 //    Date headers "화요일, 11월 (3)", "수요일, 11월 18", "목요일, 1월 28, 2027" +
 //    3px vertical color bar + event title & "All day" / "8:00 오전 - 9:00 오전")
 // ============================================================================
@@ -1852,7 +1852,7 @@ protected:
             }
             y += 44;
 
-            // Event rows under this date (54px each, matching Mailbird Screenshot 4)
+            // Event rows under this date (54px each)
             for (const CalendarEventItem &ev : dayEvs) {
                 QRect rowRect(0, y, width(), 54);
                 p.fillRect(rowRect, QColor("#FFFFFF"));

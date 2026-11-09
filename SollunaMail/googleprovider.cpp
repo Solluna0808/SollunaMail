@@ -947,8 +947,7 @@ void GoogleProvider::startGoogleOAuthLogin(const QString &clientId,
     }
 
     quint16 port = m_loopbackServer->serverPort();
-    // Exact match with Mailbird.Services.OAuth2.Authorization.Tcp.ndxdw.RequestUserAuthorization (0x06000072):
-    // "http://127.0.0.1:<port>" (without trailing slash)
+    // Local loopback redirect URI: "http://127.0.0.1:<port>" (without trailing slash)
     QString redirectUri = QString("http://127.0.0.1:%1").arg(port);
 
     connect(m_loopbackServer, &QTcpServer::newConnection, this, [this, redirectUri]() {
@@ -985,8 +984,7 @@ void GoogleProvider::startGoogleOAuthLogin(const QString &clientId,
         });
     });
 
-    // Exact match with Mailbird.Services.OAuth2.Providers.Google.GoogleOAuth2Provider.GetAuthorizationUrl (0x06000060)
-    // and GoogleOAuth2Provider.phqdw (0x06000067) verified scopes:
+    // Build Google OAuth 2.0 authorization URL with required Gmail, Contacts, and Calendar scopes:
     QUrl authUrl("https://accounts.google.com/o/oauth2/v2/auth");
     QUrlQuery q;
     q.addQueryItem("client_id", m_clientId);

@@ -79,7 +79,7 @@ public:
                             PrivacyHubSettings *privacySettings,
                             const QString &currentTheme,
                             GoogleProvider *googleProvider,
-                            int initialTabIndex = 3, // Default 3 = Privacy hub (Screenshot 3)
+                            int initialTabIndex = 3, // Default 3 = Privacy hub
                             QWidget *parent = nullptr);
 
     void refreshAccountsList();
@@ -136,7 +136,7 @@ private:
     QListWidget *m_navList = nullptr;
     QStackedWidget *m_pages = nullptr;
 
-    // Accounts tab controls (Mailbird 2-column Master-Detail)
+    // Accounts tab controls (2-column Master-Detail)
     QListWidget *m_accountsListWidget = nullptr;
     QLabel *m_accountDetailSummary = nullptr;
     int m_selectedAccountIdx = -1;

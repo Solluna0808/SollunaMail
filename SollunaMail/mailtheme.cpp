@@ -15,7 +15,7 @@ MailThemePalette MailThemeManager::getPalette(const QString &themeName)
 {
     MailThemePalette p;
     p.name = themeName;
-    // Default matches Screenshot 1, 2, 3: Deep Royal Blue sidebar + crisp White workspace
+    // Default theme palette: Deep Royal Blue sidebar + crisp White workspace
     p.leftBarBg         = QColor("#08307E");
     p.folderPaneBg      = QColor("#0B3B91");
     p.sidebarText       = QColor("#FFFFFF");
@@ -359,7 +359,7 @@ QPixmap MailIcons::sollunaAppPixmap(int size, int unreadBadgeCount)
         p.drawEllipse(QPointF(center.x() - orbitR * 0.65, center.y() + orbitR * 0.74), dotR * 0.9, dotR * 0.9);
     }
 
-    // 7. Mailbird-style Red Unread Count Badge at top-right (media_1793682185415_4085788a.png)
+    // 7. Red unread count badge at top-right
     if (unreadBadgeCount > 0) {
         QString badgeText = (unreadBadgeCount > 99) ? QStringLiteral("99+") : QString::number(unreadBadgeCount);
         const qreal badgeH = s * 0.46;
@@ -587,7 +587,7 @@ QIcon MailIcons::actionIcon(const QString &actionName, const QColor &color, int 
         shield.cubicTo(5.8, 13.5, 3.5, 10.2, 3.5, 4.8);
         shield.closeSubpath();
         painter.drawPath(shield);
-        // Yellow check badge matching Screenshot 1
+        // Yellow check badge
         painter.setPen(Qt::NoPen);
         painter.setBrush(QColor("#FBBF24"));
         painter.drawEllipse(QRectF(6.5, 6.8, 5.0, 5.0));
@@ -791,7 +791,7 @@ QPixmap MailIcons::avatarPresetPixmap(int presetIndex, const AccountItem &acc, i
         p.drawRoundedRect(outer, 7.0, 7.0);
     }
 
-    // Preset 0: Custom uploaded image / Domain Favicon / Orbit ring (Mailbird top-left icon)
+    // Preset 0: Custom uploaded image / Domain Favicon / Orbit ring
     if (presetIndex == 0) {
         if (!acc.avatarPngBase64.trimmed().isEmpty()) {
             QPixmap customImg;
@@ -1118,7 +1118,7 @@ QPixmap MailIcons::accountAvatarPixmap(const AccountItem &acc, int size, bool ac
 
     QRectF r(2.5, 2.5, size - 5.0, size - 5.0);
 
-    // 1. Google 프로필 사진 또는 일반 회사 도메인 파비콘 이미지가 캐시되어 있는 경우 직관적으로 표시 (Mailbird 스타일)
+    // 1. Google 프로필 사진 또는 일반 회사 도메인 파비콘 이미지가 캐시되어 있는 경우 직관적으로 표시
     if (acc.provider != AccountProviderType::Unified && !acc.avatarPngBase64.trimmed().isEmpty()) {
         QPixmap customImg;
         if (customImg.loadFromData(QByteArray::fromBase64(acc.avatarPngBase64.toLatin1()))) {
@@ -1167,7 +1167,7 @@ QPixmap MailIcons::accountAvatarPixmap(const AccountItem &acc, int size, bool ac
         p.setPen(Qt::NoPen);
         p.setBrush(QColor("#FFFFFF"));
         p.drawRoundedRect(r, 7.0, 7.0);
-        // Black mail badge inside white box (exact match to Screenshot 1 top icon)
+        // Black mail badge inside white box
         p.setBrush(QColor("#111827"));
         QRectF env(7.0, 10.0, size - 14.0, size - 20.0);
         p.drawRoundedRect(env, 2.0, 2.0);

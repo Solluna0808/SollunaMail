@@ -11,7 +11,7 @@
 struct MailThemePalette {
     QString name;
     QColor leftBarBg;          // #093282 (Deep Royal Blue)
-    QColor folderPaneBg;       // #0B3B91 (Mailbird Royal Blue)
+    QColor folderPaneBg;       // #0B3B91 (Royal Blue)
     QColor sidebarText;        // #FFFFFF
     QColor sidebarMutedText;   // #9AB3E2
     QColor sidebarHoverBg;     // #184CA8
