@@ -4352,7 +4352,7 @@ void MainWindow::onOpenSettingsModal(int initialTabIndex)
                 const QString targetFolder = (m_selectedFolderId == QStringLiteral("snoozed") || m_selectedFolderId.isEmpty())
                                                  ? QStringLiteral("inbox")
                                                  : m_selectedFolderId;
-                m_googleProvider->fetchImapFolder(acc, targetFolder, 200, 0);
+                m_googleProvider->fetchImapFolder(acc, targetFolder, 20, 0);
                 if (!acc.oauthAccessToken.isEmpty() || !acc.oauthRefreshToken.isEmpty()) {
                     m_googleProvider->syncGoogleCalendarEvents(acc.email, acc.oauthAccessToken, acc.oauthRefreshToken);
                     m_googleProvider->syncGoogleContacts(acc.email, acc.oauthAccessToken, acc.oauthRefreshToken);
@@ -4568,7 +4568,7 @@ void MainWindow::onQuickAddAccountFromLeftBar()
         saveAccountsToDisk();
         onSelectAccount(newAcc.id);
         m_googleProvider->fetchAccountAvatar(newAcc);
-        m_googleProvider->fetchImapFolder(newAcc, QStringLiteral("inbox"), 200, 0);
+        m_googleProvider->fetchImapFolder(newAcc, QStringLiteral("inbox"), 20, 0);
         if (!newAcc.oauthAccessToken.isEmpty() || !newAcc.oauthRefreshToken.isEmpty()) {
             m_googleProvider->syncGoogleCalendarEvents(newAcc.email, newAcc.oauthAccessToken, newAcc.oauthRefreshToken);
             m_googleProvider->syncGoogleContacts(newAcc.email, newAcc.oauthAccessToken, newAcc.oauthRefreshToken);
@@ -6410,11 +6410,11 @@ void MainWindow::loadAccountsFromDisk()
         if (appCfg.contains("autoSyncIntervalSec"))
             MailI18n::autoSyncIntervalSec() = qBound(0, appCfg.value("autoSyncIntervalSec").toInt(60), 3600);
         if (appCfg.contains("pageFetchSize"))
-            MailI18n::pageFetchSize() = qBound(50, appCfg.value("pageFetchSize").toInt(200), 500);
-        if (MailI18n::pageFetchSize() != 200)
-            MailI18n::pageFetchSize() = 200;
+            MailI18n::pageFetchSize() = qBound(20, appCfg.value("pageFetchSize").toInt(20), 500);
+        if (MailI18n::pageFetchSize() != 20)
+            MailI18n::pageFetchSize() = 20;
         if (appCfg.contains("imapSliceBytes"))
-            MailI18n::imapSliceBytes() = appCfg.value("imapSliceBytes").toInt(32768);
+            MailI18n::imapSliceBytes() = appCfg.value("imapSliceBytes").toInt(65536);
         if (appCfg.contains("aiProvider"))
             MailI18n::aiProvider() = appCfg.value("aiProvider").toString("Gemini");
         if (appCfg.contains("geminiApiKey"))
@@ -6740,21 +6740,21 @@ void MainWindow::onRefreshAndSyncCurrentAccount()
             const int totalEx = m_folderTotalExists.value(folderKey, 0);
             int pageEndSeq = 0;
             if (m_currentMailPage > 1 && totalEx > 0) {
-                pageEndSeq = qMax(1, totalEx - (m_currentMailPage - 1) * 200);
+                pageEndSeq = qMax(1, totalEx - (m_currentMailPage - 1) * 20);
             }
             m_folderLoadingMore.insert(folderKey);
-            m_googleProvider->fetchImapFolder(acc, effectiveFolder, 200, pageEndSeq);
+            m_googleProvider->fetchImapFolder(acc, effectiveFolder, 20, pageEndSeq);
             if (!acc.isPop3() && (effectiveFolder == QStringLiteral("starred")
                                   || effectiveFolder == QStringLiteral("important"))) {
                 const QString inbKey = acc.id + QStringLiteral("|inbox");
                 m_folderLoadingMore.insert(inbKey);
-                m_googleProvider->fetchImapFolder(acc, QStringLiteral("inbox"), 200, 0);
+                m_googleProvider->fetchImapFolder(acc, QStringLiteral("inbox"), 20, 0);
                 for (const FolderItem &cf : m_folders) {
                     if (!cf.isCustom || cf.accountId != acc.id)
                         continue;
                     const QString cfKey = acc.id + QStringLiteral("|") + cf.id;
                     m_folderLoadingMore.insert(cfKey);
-                    m_googleProvider->fetchImapFolder(acc, cf.id, 200, 0);
+                    m_googleProvider->fetchImapFolder(acc, cf.id, 20, 0);
                 }
             }
             if (!acc.oauthAccessToken.isEmpty() || !acc.oauthRefreshToken.isEmpty()) {

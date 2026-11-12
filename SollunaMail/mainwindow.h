@@ -96,7 +96,7 @@ private:
 
     void refreshFolderSelectionStyles();
     void refreshConversationList();
-    void appendMoreConversationRows(int pageSize = 200);
+    void appendMoreConversationRows(int pageSize = 20);
     void onConversationListScrolled(int value);
     void onSelectMailPage(int page);
     void updateMailPaginationBar();

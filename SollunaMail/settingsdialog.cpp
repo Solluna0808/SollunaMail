@@ -5989,15 +5989,16 @@ QWidget *SettingsDialog::createAdvancedPage()
     });
 
     QComboBox *batchCombo = new QComboBox(perfBox);
+    batchCombo->addItem(MailI18n::t("20건씩 로드 (권장 — 20 messages per page)", "20 messages per page (Recommended)", "20件ずつ読込（推奨）"), 20);
     batchCombo->addItem(MailI18n::t("50건씩 로드 (50 messages per page)", "50 messages per page", "50件ずつ読込"), 50);
     batchCombo->addItem(MailI18n::t("100건씩 로드 (100 messages per page)", "100 messages per page", "100件ずつ読込"), 100);
-    batchCombo->addItem(MailI18n::t("200건씩 로드 (권장 — 200 messages per page)", "200 messages per page (Recommended)", "200件ずつ読込（推奨）"), 200);
+    batchCombo->addItem(MailI18n::t("200건씩 로드 (200 messages per page)", "200 messages per page", "200件ずつ読込"), 200);
     batchCombo->addItem(MailI18n::t("500건씩 로드 (500 messages per page)", "500 messages per page", "500件ずつ読込"), 500);
     int bIdx = batchCombo->findData(MailI18n::pageFetchSize());
     if (bIdx >= 0)
         batchCombo->setCurrentIndex(bIdx);
     else
-        batchCombo->setCurrentIndex(2);
+        batchCombo->setCurrentIndex(0);
     batchCombo->setStyleSheet("background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 5px; padding: 6px 10px;");
     connect(batchCombo, &QComboBox::currentIndexChanged, this, [batchCombo]() {
         MailI18n::pageFetchSize() = batchCombo->currentData().toInt();
@@ -6005,8 +6006,8 @@ QWidget *SettingsDialog::createAdvancedPage()
 
     QComboBox *sliceCombo = new QComboBox(perfBox);
     sliceCombo->addItem(MailI18n::t("16 KB 슬라이스 (초고속 목록 조회)", "16 KB Slice (Fastest list preview)", "16 KB スライス（超高速一覧取得）"), 16384);
-    sliceCombo->addItem(MailI18n::t("32 KB 슬라이스 (권장 — 본문 미리보기 + 고속 조회)", "32 KB Slice (Recommended)", "32 KB スライス（推奨）"), 32768);
-    sliceCombo->addItem(MailI18n::t("64 KB 슬라이스", "64 KB Slice", "64 KB スライス"), 65536);
+    sliceCombo->addItem(MailI18n::t("32 KB 슬라이스 (본문 미리보기 + 고속 조회)", "32 KB Slice", "32 KB スライス"), 32768);
+    sliceCombo->addItem(MailI18n::t("64 KB 슬라이스 (권장 — 제목+본문 동시 로드)", "64 KB Slice (Recommended)", "64 KB スライス（推奨）"), 65536);
     sliceCombo->addItem(MailI18n::t("전체 본문 다운로드 (느림)", "Full Body Download (Slower)", "全文ダウンロード（低速）"), 0);
     int sIdx = sliceCombo->findData(MailI18n::imapSliceBytes());
     if (sIdx >= 0)
@@ -6704,18 +6705,18 @@ QWidget *SettingsDialog::createHelpGuidePage()
                 "<ul style='margin: 4px 0 4px 18px; line-height: 1.65;'>"
                 "<li><b>통합 편지함 & 개별 계정 전환:</b> 가장 좌측의 <b>통합 편지함(봉투 아이콘)</b>을 누르면 등록된 모든 계정의 메일을 한곳에서 모아 볼 수 있으며, 아래의 계정 아바타를 클릭하면 해당 계정의 메일함과 내 폴더만 독립적으로 조회합니다.</li>"
                 "<li><b>빠른 필터 & 검색:</b> 메일 목록 상단 아이콘으로 <b>검색창(제목/발신자/본문)</b>과 <b>빠른 필터(전체 · 안읽음 · 별표 · 첨부파일)</b>를 켜고 끌 수 있습니다.</li>"
-                "<li><b>200건 페이지네이션 & 지연 로딩:</b> 대량 메일함도 쾌적하게 탐색할 수 있도록 한 페이지당 200건씩 나누어 표시하며 하단 페이지 번호(<code>1 2 3 ...</code>)로 이동합니다. <b>메일 제목을 클릭</b>하면 서버에서 본문과 첨부파일을 불러옵니다.</li>"
+                "<li><b>20건 페이지네이션 & 제목·본문 동시 로딩:</b> 대량 메일함도 쾌적하게 탐색할 수 있도록 한 페이지당 20건씩 나누어 제목과 본문을 함께 표시하며 하단 페이지 번호(<code>1 2 3 ...</code>)로 이동합니다.</li>"
                 "<li><b>체크박스 다중 선택 & 일괄 처리:</b> 체크박스를 클릭할 때는 본문을 불러오지 않으며, 여러 메일을 체크한 뒤 상단 툴바 또는 <code>⋮</code> 메뉴에서 <b>일괄 읽음/안읽음, 별표, 스팸 등록, 휴지통 이동, 영구 삭제</b>를 수행할 수 있습니다.</li>"
                 "<li><b>크게 보기 & 원문(.eml)/인쇄:</b> 우측 본문 상단의 <b>[크게 보기]</b> 버튼(또는 메일 더블클릭)으로 독립된 읽기 창을 띄울 수 있고, 본문 우측 <code>⋮</code> 메뉴에서 <b>인쇄, PDF 저장, 원문(.eml) 보기, 텍스트만 보기</b>를 지원합니다.</li>"
                 "</ul>",
                 "<ul style='margin: 4px 0 4px 18px; line-height: 1.65;'>"
                 "<li><b>Unified Inbox & Account Switcher:</b> Click the top envelope icon on the far-left rail to view all accounts together, or click an individual account avatar below it.</li>"
-                "<li><b>Quick Filters & Pagination:</b> Filter by <b>All / Unread / Starred / Attachment</b> and navigate large mailboxes smoothly at 200 messages per page. Clicking a message subject loads the body on demand.</li>"
+                "<li><b>Quick Filters & Pagination:</b> Filter by <b>All / Unread / Starred / Attachment</b> and navigate large mailboxes smoothly at 20 messages per page with subjects and bodies loaded together.</li>"
                 "<li><b>Batch Actions & Pop-out Reader:</b> Check multiple messages for bulk actions (Read/Unread, Star, Spam, Trash, Delete Permanently), or click <b>[Pop-out View]</b> to read in a standalone window with Print/PDF/.eml support.</li>"
                 "</ul>",
                 "<ul style='margin: 4px 0 4px 18px; line-height: 1.65;'>"
                 "<li><b>統合受信トレイとアカウント切替:</b> 左端上部の封筒アイコンで全アカウントを統合表示し、下の各アバターをクリックすると個別アカウントに切り替わります。</li>"
-                "<li><b>フィルターとページ表示:</b> <b>すべて・未読・スター・添付あり</b>で絞り込みでき、1ページ200件単位で高速に表示します。件名をクリックすると本文を読み込みます。</li>"
+                "<li><b>フィルターとページ表示:</b> <b>すべて・未読・スター・添付あり</b>で絞り込みでき、1ページ20件単位で件名と本文を同時に読み込みます。</li>"
                 "<li><b>一括操作と拡大表示:</b> チェックボックスで複数選択して一括既読・削除・迷惑メール処理が可能で、<b>[拡大表示]</b> ボタンで別ウィンドウ表示や印刷・PDF保存・原文(.eml)確認も行えます。</li>"
                 "</ul>"),
             2,

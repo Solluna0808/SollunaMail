@@ -70,9 +70,9 @@ public:
     void fetchAccountAvatar(const AccountItem &account);
 
     // 3. Live IMAP / POP3 SSL Fetch & Folder Actions (Gmail imap.gmail.com:993 / Custom IMAP / POP3 / iCloud — 2단계 고속 스트리밍 & 온디맨드 본문 로드)
-    void fetchImapInbox(const AccountItem &account, int maxMessages = 200);
-    void fetchImapFolder(const AccountItem &account, const QString &folderId, int maxMessages = 200, int endSeq = 0);
-    void fetchPop3Inbox(const AccountItem &account, int maxMessages = 200, int endSeq = 0);
+    void fetchImapInbox(const AccountItem &account, int maxMessages = 20);
+    void fetchImapFolder(const AccountItem &account, const QString &folderId, int maxMessages = 20, int endSeq = 0);
+    void fetchPop3Inbox(const AccountItem &account, int maxMessages = 20, int endSeq = 0);
     void checkImapInboxQuick(const AccountItem &account, int knownExistsCount = -1);
     void checkPop3InboxQuick(const AccountItem &account, int knownExistsCount = -1);
     void startImapIdleWatcher(const AccountItem &account);
@@ -80,7 +80,7 @@ public:
     void registerLoadedImapUid(const QString &accountId, const QString &folderId, int uid);
     void unregisterLoadedImapUid(const QString &accountId, const QString &folderId, int uid);
     void clearLoadedImapUids(const QString &accountId = QString(), const QString &folderId = QString());
-    void fetchAllStandardImapFolders(const AccountItem &account, int maxMessagesPerFolder = 200);
+    void fetchAllStandardImapFolders(const AccountItem &account, int maxMessagesPerFolder = 20);
     void fetchImapSingleMessageBody(const AccountItem &account,
                                     const QString &folderId,
                                     int seqNum,

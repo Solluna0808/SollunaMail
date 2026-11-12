@@ -3078,7 +3078,7 @@ void GoogleProvider::fetchPop3Inbox(const AccountItem &account, int maxMessages,
                     socket->write("QUIT\r\n");
                     return;
                 }
-                const int pageSize = maxMessages > 0 ? qMin(maxMessages, 35) : 30;
+                const int pageSize = maxMessages > 0 ? qMin(maxMessages, 20) : 20;
                 const int actualEnd = (endSeq > 0 && endSeq <= existsCount) ? endSeq : existsCount;
                 const int startSeq = qMax(1, actualEnd - pageSize + 1);
                 *startSeqOut = startSeq;
@@ -3518,7 +3518,7 @@ void GoogleProvider::fetchImapFolder(const AccountItem &account, const QString &
                 socket->write("A05 LOGOUT\r\n");
                 return;
             }
-            int pageSize = maxMessages > 0 ? maxMessages : 200;
+            int pageSize = maxMessages > 0 ? maxMessages : 20;
             int actualEnd = (endSeq > 0 && endSeq <= existsCount) ? endSeq : existsCount;
             int startSeq = qMax(1, actualEnd - pageSize + 1);
             *startSeqOut = startSeq;
@@ -3592,14 +3592,19 @@ void GoogleProvider::fetchImapFolder(const AccountItem &account, const QString &
             }
 
             // Step 1-B: 다음(imap.daum.net) 등 불연속 UID 서버에서 쉼표 나열 길이 초과(A04 BAD)가 발생하지 않도록
-            //           미로드 구간(fetchStartSeq:fetchEndSeq)에 대해 단일 범위 FETCH (UID FLAGS BODY.PEEK[HEADER.FIELDS]) 요청
+            //           미로드 구간(fetchStartSeq:fetchEndSeq)에 대해 20건 단위로 제목(헤더)과 본문(BODY.PEEK[])을 함께 요청
             const int fallbackEnd = (endSeq > 0 && endSeq <= *totalExists) ? endSeq : *totalExists;
             const int fetchStartSeq = (minMissingSeq > 0) ? minMissingSeq : *startSeqOut;
             const int fetchEndSeq = (maxMissingSeq >= fetchStartSeq) ? maxMissingSeq : qMax(fetchStartSeq, fallbackEnd);
+            const int sliceBytes = MailI18n::imapSliceBytes();
+            const QString bodyPeekSpec = (sliceBytes > 0)
+                                             ? QString("BODY.PEEK[]<0.%1>").arg(sliceBytes)
+                                             : QStringLiteral("BODY.PEEK[]");
             *step = 4;
-            QString fetchCmd = QString("A04 FETCH %1:%2 (UID FLAGS BODY.PEEK[HEADER.FIELDS (FROM TO CC SUBJECT DATE MESSAGE-ID DISPOSITION-NOTIFICATION-TO RETURN-RECEIPT-TO X-CONFIRM-READING-TO X-PRIORITY IMPORTANCE X-MSMAIL-PRIORITY PRIORITY)])\r\n")
+            QString fetchCmd = QString("A04 FETCH %1:%2 (UID FLAGS %3)\r\n")
                                    .arg(fetchStartSeq)
-                                   .arg(fetchEndSeq);
+                                   .arg(fetchEndSeq)
+                                   .arg(bodyPeekSpec);
             socket->write(fetchCmd.toUtf8());
         } else if (*step == 4 && (respLatin1.contains("\r\nA04 OK") || respLatin1.startsWith("A04 OK")
                                   || respLatin1.contains("\r\nA04 NO") || respLatin1.startsWith("A04 NO")
@@ -3613,6 +3618,7 @@ void GoogleProvider::fetchImapFolder(const AccountItem &account, const QString &
             static QRegularExpression rxFetchLiteral(R"(\*\s+(\d+)\s+FETCH\s*\(([^\r\n]*)\{(\d+)\}\r\n)",
                                                      QRegularExpression::CaseInsensitiveOption);
             static QRegularExpression rxUid(R"(\bUID\s+(\d+))", QRegularExpression::CaseInsensitiveOption);
+            const int sliceBytes = MailI18n::imapSliceBytes();
             int searchPos = 0;
             int idx = 1;
             while (searchPos < respLatin1.size()) {
@@ -3649,8 +3655,10 @@ void GoogleProvider::fetchImapFolder(const AccountItem &account, const QString &
                 c.id = QString("imap_%1_%2_%3").arg(account.id, folderId).arg(uid);
 
                 QString htmlBody, plainBody, fromLine, subjLine, dateLine, toLine;
+                QList<AttachmentItem> parsedAtts;
+                const bool isTruncated = (sliceBytes > 0 && literalLen >= sliceBytes);
                 parseMimeEntity(rawEmail, htmlBody, plainBody, &fromLine, &subjLine, &dateLine, &toLine,
-                                nullptr, c.id, false, false);
+                                &parsedAtts, c.id, !isTruncated, isTruncated);
                 if (fromLine.isEmpty() && subjLine.isEmpty() && dateLine.isEmpty())
                     continue;
 
@@ -3679,6 +3687,7 @@ void GoogleProvider::fetchImapFolder(const AccountItem &account, const QString &
 
                 MessageItem msg;
                 msg.id = c.id + "_m1";
+                msg.attachments = parsedAtts;
                 QString rawSenderName = fromLine.section('<', 0, 0).remove('"').trimmed();
                 if (rawSenderName.isEmpty())
                     rawSenderName = fromLine;
@@ -3702,8 +3711,13 @@ void GoogleProvider::fetchImapFolder(const AccountItem &account, const QString &
                 msg.shortTimeText = dateLine.left(16);
                 msg.fullTimeText = dateLine;
                 msg.subject = c.subject;
-                msg.snippet = c.subject;
-                msg.htmlBody = QStringLiteral("<!--SM_HEADER_ONLY-->");
+                msg.snippet = htmlToPlainTextSnippet(htmlBody, plainBody, 50);
+                if (msg.snippet.isEmpty())
+                    msg.snippet = c.subject;
+                QString viewerHtml = sanitizeEmailHtmlForViewer(htmlBody, plainBody);
+                if (isTruncated && !viewerHtml.startsWith(QStringLiteral("<!--SM_PARTIAL-->")))
+                    viewerHtml.prepend(QStringLiteral("<!--SM_PARTIAL-->"));
+                msg.htmlBody = viewerHtml;
 
                 c.messages.append(msg);
                 registerLoadedImapUid(account.id, folderId, uid);
@@ -3811,8 +3825,8 @@ void GoogleProvider::checkImapInboxQuick(const AccountItem &account, int knownEx
             // 건수가 변동되었을 때만 실제 INBOX 최신 메일을 가져온다 (변동이 없으면 FETCH 0바이트!)
             if (existsCount >= 0 && existsCount != knownExistsCount) {
                 int fetchCount = (knownExistsCount > 0 && existsCount > knownExistsCount)
-                                     ? qBound(5, existsCount - knownExistsCount + 5, 25)
-                                     : 25;
+                                     ? qBound(5, existsCount - knownExistsCount + 5, 20)
+                                     : 20;
                 fetchImapFolder(account, QStringLiteral("inbox"), fetchCount, 0);
             }
         }
@@ -4151,15 +4165,19 @@ void GoogleProvider::fetchAllStandardImapFolders(const AccountItem &account, int
             *buffer = QByteArray();
             *step = 4;
             ++(*cmdSeq);
-            // 1단계 표준 IMAP 조회: 초기 200건 목록은 제목·발신자·날짜·플래그(HEADER.FIELDS)만 초고속으로 가져오고,
-            // 본문 전체 내용(BODY.PEEK[])은 사용자가 메일을 클릭할 때 fetchImapSingleMessageBody()로 온전히 다운로드한다.
-            int limit = maxMessagesPerFolder > 0 ? maxMessagesPerFolder : 200;
+            // 1페이지 20건 단위 조회: 제목(헤더)과 본문(BODY.PEEK[])을 함께 가져와 메일 클릭 시 대기 없이 즉시 표시한다.
+            int limit = maxMessagesPerFolder > 0 ? maxMessagesPerFolder : 20;
             int startSeq = qMax(1, existsCount - limit + 1);
             *folderStartSeq = startSeq;
-            QString fetchCmd = QString("A%1 FETCH %2:%3 (UID FLAGS BODY.PEEK[HEADER.FIELDS (FROM TO CC SUBJECT DATE MESSAGE-ID DISPOSITION-NOTIFICATION-TO RETURN-RECEIPT-TO X-CONFIRM-READING-TO X-PRIORITY IMPORTANCE X-MSMAIL-PRIORITY PRIORITY)])\r\n")
+            const int sliceBytes = MailI18n::imapSliceBytes();
+            const QString bodyPeekSpec = (sliceBytes > 0)
+                                             ? QString("BODY.PEEK[]<0.%1>").arg(sliceBytes)
+                                             : QStringLiteral("BODY.PEEK[]");
+            QString fetchCmd = QString("A%1 FETCH %2:%3 (UID FLAGS %4)\r\n")
                                    .arg(*cmdSeq)
                                    .arg(startSeq)
-                                   .arg(existsCount);
+                                   .arg(existsCount)
+                                   .arg(bodyPeekSpec);
             socket->write(fetchCmd.toUtf8());
         } else if (*step == 4) {
             QString tagOk = QString("\r\nA%1 OK").arg(*cmdSeq);
@@ -4175,6 +4193,7 @@ void GoogleProvider::fetchAllStandardImapFolders(const AccountItem &account, int
             static QRegularExpression rxFetchLiteral(R"(\*\s+(\d+)\s+FETCH\s*\(([^\r\n]*)\{(\d+)\}\r\n)",
                                                      QRegularExpression::CaseInsensitiveOption);
             static const QRegularExpression rxUid(R"(\bUID\s+(\d+))", QRegularExpression::CaseInsensitiveOption);
+            const int sliceBytes = MailI18n::imapSliceBytes();
 
             int searchPos = 0;
             int idx = 1;
@@ -4211,8 +4230,10 @@ void GoogleProvider::fetchAllStandardImapFolders(const AccountItem &account, int
                     rawEmail.append("\r\n\r\n");
 
                 QString htmlBody, plainBody, fromLine, subjLine, dateLine, toLine;
+                QList<AttachmentItem> parsedAtts;
+                const bool isTruncated = (sliceBytes > 0 && literalLen >= sliceBytes);
                 parseMimeEntity(rawEmail, htmlBody, plainBody, &fromLine, &subjLine, &dateLine, &toLine,
-                                nullptr, c.id, false, false);
+                                &parsedAtts, c.id, !isTruncated, isTruncated);
 
                 if (fromLine.isEmpty() && subjLine.isEmpty() && dateLine.isEmpty())
                     continue;
@@ -4242,6 +4263,7 @@ void GoogleProvider::fetchAllStandardImapFolders(const AccountItem &account, int
 
                 MessageItem msg;
                 msg.id = c.id + "_m1";
+                msg.attachments = parsedAtts;
                 QString rawSenderName = fromLine.section('<', 0, 0).remove('"').trimmed();
                 if (rawSenderName.isEmpty())
                     rawSenderName = fromLine;
@@ -4265,8 +4287,13 @@ void GoogleProvider::fetchAllStandardImapFolders(const AccountItem &account, int
                 msg.shortTimeText = dateLine.left(16);
                 msg.fullTimeText = dateLine;
                 msg.subject = c.subject;
-                msg.snippet = c.subject;
-                msg.htmlBody = QStringLiteral("<!--SM_HEADER_ONLY-->");
+                msg.snippet = htmlToPlainTextSnippet(htmlBody, plainBody, 50);
+                if (msg.snippet.isEmpty())
+                    msg.snippet = c.subject;
+                QString viewerHtml = sanitizeEmailHtmlForViewer(htmlBody, plainBody);
+                if (isTruncated && !viewerHtml.startsWith(QStringLiteral("<!--SM_PARTIAL-->")))
+                    viewerHtml.prepend(QStringLiteral("<!--SM_PARTIAL-->"));
+                msg.htmlBody = viewerHtml;
 
                 c.messages.append(msg);
                 convs.prepend(c);
@@ -6268,7 +6295,7 @@ void GoogleProvider::moveImapMessagesToFolder(const AccountItem &account,
                 && targetFolderId != QStringLiteral("trash")
                 && targetFolderId != QStringLiteral("spam")) {
                 clearLoadedImapUids(account.id, targetFolderId);
-                fetchImapFolder(account, targetFolderId, 200, 0);
+                fetchImapFolder(account, targetFolderId, 20, 0);
             }
             emit statusMessage(MailI18n::t(QString("[%1] IMAP 서버에서 '%2' 폴더로 메일 이동 및 원본 정리(EXPUNGE) 완료"),
                                            QString("[%1] Moved messages to '%2' on IMAP server (EXPUNGE)"),
@@ -6577,7 +6604,7 @@ void GoogleProvider::appendMessageToImapFolder(const AccountItem &account,
             emlFile.write(rawMime);
             emlFile.close();
         }
-        fetchImapFolder(account, targetFid, 50, 0);
+        fetchImapFolder(account, targetFid, 20, 0);
         return;
     }
     if (account.imapHost.isEmpty())
@@ -6684,7 +6711,7 @@ void GoogleProvider::appendMessageToImapFolder(const AccountItem &account,
                                                QString("[%1] Synced message to IMAP folder '%2' (APPEND)"),
                                                QString("[%1] IMAP フォルダ '%2' にメールを保存 (APPEND) しました"))
                                        .arg(account.email, *targetMbox));
-                fetchImapFolder(account, folderId, 50, 0);
+                fetchImapFolder(account, folderId, 20, 0);
             }
             socket->disconnectFromHost();
         }

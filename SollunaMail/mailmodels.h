@@ -809,12 +809,12 @@ public:
     }
 
     static int &pageFetchSize() {
-        static int s_batch = 200;
+        static int s_batch = 20;
         return s_batch;
     }
 
     static int &imapSliceBytes() {
-        static int s_slice = 32768;
+        static int s_slice = 65536;
         return s_slice;
     }
 

@@ -507,7 +507,7 @@ MainWindow::MainWindow(QWidget *parent)
             const QString targetFolder = (m_selectedFolderId == QStringLiteral("snoozed") || m_selectedFolderId.isEmpty())
                                              ? QStringLiteral("inbox")
                                              : m_selectedFolderId;
-            m_googleProvider->fetchImapFolder(updatedAcc, targetFolder, 1000, 0);
+            m_googleProvider->fetchImapFolder(updatedAcc, targetFolder, 20, 0);
         }
     });
 
@@ -726,7 +726,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
         m_folderLoadingMore.remove(folderKey);
 
-        if (pageConvs.size() >= 50
+        if (pageConvs.size() >= 20
             && (m_selectedAccountId == "acc_unified" || accountId == m_selectedAccountId)
             && (folderId == m_selectedFolderId || m_selectedFolderId == "starred" || m_selectedFolderId == "important")) {
             showMailLoadingToast(QString(), 2000);
@@ -1327,7 +1327,7 @@ MainWindow::MainWindow(QWidget *parent)
         // 아직 메모리에 없으면 즉시 해당 페이지 구간을 서버에 요청하고 로딩 상태를 유지한다.
         const int serverTotal = m_folderTotalExists.value(folderKey, totalExistsCount);
         if (m_currentMailPage > 1 && serverTotal > 0 && folderId == m_selectedFolderId) {
-            const int kPageSize = 200;
+            const int kPageSize = 20;
             const int curPageEndSeq = serverTotal - (m_currentMailPage - 1) * kPageSize;
             const int curPageStartSeq = qMax(1, curPageEndSeq - kPageSize + 1);
             if (curPageEndSeq >= 1) {
@@ -4826,9 +4826,9 @@ void MainWindow::refreshConversationList()
     });
 
     // ------------------------------------------------------------------------
-    // 200개 단위 페이지네이션 슬라이싱 (자동 스크롤 로드 없이 선택된 페이지의 200개만 표시)
+    // 20개 단위 페이지네이션 슬라이싱 (자동 스크롤 로드 없이 선택된 페이지의 20개만 표시)
     // ------------------------------------------------------------------------
-    const int kPageSize = 200;
+    const int kPageSize = 20;
     int serverTotalForFolder = 0;
     for (const AccountItem &acc : m_accounts) {
         if (acc.provider == AccountProviderType::Unified)
@@ -5224,7 +5224,7 @@ int MainWindow::countLoadedConversationsForFolder(const QString &accountId, cons
 
 void MainWindow::onConversationListScrolled(int value)
 {
-    // 자동 스크롤 로드(Infinite Scroll) 비활성화 — 하단 200개 단위 페이지네이션 바(onSelectMailPage)로만 페이지를 전환합니다.
+    // 자동 스크롤 로드(Infinite Scroll) 비활성화 — 하단 20개 단위 페이지네이션 바(onSelectMailPage)로만 페이지를 전환합니다.
     Q_UNUSED(value);
 }
 
@@ -5233,7 +5233,7 @@ void MainWindow::updateMailPaginationBar()
     if (!m_mailPaginationBar)
         return;
 
-    const int kPageSize = 200;
+    const int kPageSize = 20;
     int serverTotal = 0;
     for (const AccountItem &acc : m_accounts) {
         if (acc.provider == AccountProviderType::Unified)
@@ -5344,7 +5344,7 @@ void MainWindow::onSelectMailPage(int page)
     const int targetPage = qBound(1, page, m_totalMailPages);
     m_currentMailPage = targetPage;
 
-    const int kPageSize = 200;
+    const int kPageSize = 20;
     bool triggeredFetch = false;
 
     for (const AccountItem &acc : m_accounts) {
@@ -6761,7 +6761,7 @@ void MainWindow::onSelectAccount(const QString &accountId)
     if (!toFetchFolderRequests.isEmpty()) {
         showMailLoadingToast(QString(), 2000);
         for (const auto &req : toFetchFolderRequests) {
-            m_googleProvider->fetchImapFolder(req.first, req.second, 200, 0);
+            m_googleProvider->fetchImapFolder(req.first, req.second, 20, 0);
         }
     }
 }
@@ -6799,7 +6799,7 @@ void MainWindow::onSelectFolder(const QString &folderId, const QString &folderDi
     m_centerStack->setCurrentIndex(0);
     refreshFolderSelectionStyles();
 
-    // 선택한 폴더를 클릭할 때마다 서버에서 최신 메일 목록(Server-Truth)을 즉시 조회 (1회 200건 헤더 조회 + 2초 토스트 안내)
+    // 선택한 폴더를 클릭할 때마다 서버에서 최신 메일 목록(Server-Truth)을 즉시 조회 (1회 20건 제목+본문 조회 + 2초 토스트 안내)
     QList<QPair<AccountItem, QString>> toFetchFolderRequests;
     if (folderId != "snoozed") {
         for (const AccountItem &acc : m_accounts) {
@@ -6851,7 +6851,7 @@ void MainWindow::onSelectFolder(const QString &folderId, const QString &folderDi
 
     if (!toFetchFolderRequests.isEmpty()) {
         for (const auto &req : toFetchFolderRequests) {
-            m_googleProvider->fetchImapFolder(req.first, req.second, 200, 0);
+            m_googleProvider->fetchImapFolder(req.first, req.second, 20, 0);
         }
         showMailLoadingToast(QString(), 2000);
     }
